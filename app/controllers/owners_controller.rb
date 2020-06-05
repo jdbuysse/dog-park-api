@@ -22,18 +22,28 @@ class OwnersController < ApplicationController
       age: params[:age],
     )
 
-    render json: { owner: @owner }, status: :created
+    #honestly forget what these two methods were about
+    @dogs = params[:dogs].map do |dog|
+      Dog.create(
+        name: dog[:name],
+        breed: dog[:breed],
+      )
+    end
+
+    @dogs.each do |dog| 
+      @owner.dogs << dog
+    end
+
+    render json: { owner: @owner }, status: :created, include: [:dogs]
   end
 
   def show
     @owner = Owner.find params[:id]
-
-    render json: { owner: @owner }
+    render json: { owner: @owner }, include: [:dogs]
   end
 
   def index
     @owners = Owner.all
-
-    render json: { owners: @owners }
+    render json: { owners: @owners }, include: [:dogs]
   end
 end

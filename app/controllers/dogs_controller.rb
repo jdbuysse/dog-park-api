@@ -27,13 +27,11 @@ class DogsController < ApplicationController
 
   def show
     @dog = Dog.find params[:id]
-
-    render json: { dog: @dog }
+    render json: { dog: @dog }, include: [:owners]
   end
 
   def index
     @dogs = Dog.all
-
-    render json: { dogs: @dogs }
+    render json: { dogs: @dogs }, include: [:owners]
   end
 end
